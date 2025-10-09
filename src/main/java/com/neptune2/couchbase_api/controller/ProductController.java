@@ -1,8 +1,8 @@
 package com.neptune2.couchbase_api.controller;
 
 import com.neptune2.couchbase_api.model.Product;
+import com.neptune2.couchbase_api.service.CouchbaseScopeService;
 import com.neptune2.couchbase_api.service.ProductService;
-import com.neptune2.couchbase_api.config.CouchbaseScopeService;
 import com.couchbase.client.java.json.JsonObject;
 import com.couchbase.client.java.kv.GetResult;
 import com.couchbase.client.java.Collection;

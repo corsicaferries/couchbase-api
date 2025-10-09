@@ -1,52 +1,53 @@
 package com.neptune2.couchbase_api.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import com.couchbase.client.java.Cluster;
-import com.couchbase.client.java.Bucket;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.couchbase.config.AbstractCouchbaseConfiguration;
 import org.springframework.data.couchbase.repository.config.EnableCouchbaseRepositories;
+import com.couchbase.client.java.Cluster;
+import com.couchbase.client.java.Bucket;
 import java.time.Duration;
 
 @Configuration
 @EnableCouchbaseRepositories(basePackages = "com.neptune2.couchbase_api.repository")
 public class CouchbaseConfig extends AbstractCouchbaseConfiguration {
 
+    @Value("${spring.couchbase.connection-string}")
+    private String connectionString;
+
+    @Value("${spring.couchbase.username}")
+    private String username;
+
+    @Value("${spring.couchbase.password}")
+    private String password;
+
+    @Value("${spring.data.couchbase.bucket-name}")
+    private String bucketName;
+
+   
     @Override
-    public String getConnectionString() {
-        return "couchbase://172.20.28.3"; // adapte à ton serveur
-    }
+    public String getConnectionString() { return connectionString; }
 
     @Override
-    public String getUserName() {
-        return "neptune-dev"; // ton utilisateur Couchbase
-    }
+    public String getUserName() { return username; }
 
     @Override
-    public String getPassword() {
-        return "ZdSlvjQlFVykemf7m9ww"; // ton mot de passe
-    }
+    public String getPassword() { return password; }
 
     @Override
-    public String getBucketName() {
-        return "ClickAndCollect"; // ton bucket
-    }
-      // Spécifie le scope
-    @Override
-    public String getScopeName() {
-        return "repository";  // remplace par le scope réel de ton bucket
-    }
-  @Bean
+    public String getBucketName() { return bucketName; }
+
+   
+    @Bean
     public Cluster couchbaseCluster() {
         return Cluster.connect(getConnectionString(), getUserName(), getPassword());
     }
 
-@Bean
-public Bucket clickAndCollectBucket(Cluster cluster) {
-    Bucket bucket = cluster.bucket("ClickAndCollect");
-    bucket.waitUntilReady(Duration.ofSeconds(10));
-    return bucket;
-}
-
-    
+    @Bean
+    public Bucket clickAndCollectBucket(Cluster cluster) {
+        Bucket bucket = cluster.bucket(getBucketName());
+        bucket.waitUntilReady(Duration.ofSeconds(10));
+        return bucket;
+    }
 }

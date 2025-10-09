@@ -2,7 +2,6 @@ package com.neptune2.couchbase_api.service;
 
 import com.couchbase.client.java.query.QueryResult;
 import com.couchbase.client.java.Cluster;
-import com.neptune2.couchbase_api.config.CouchbaseScopeService;
 import com.neptune2.couchbase_api.model.Product;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
