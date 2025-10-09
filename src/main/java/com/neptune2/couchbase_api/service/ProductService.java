@@ -62,31 +62,36 @@ public class ProductService {
         return products;
     }
 
-    public Product getProductById(Integer productId) {        
-            String bucket = "ClickAndCollect";
-            String scope = "repository";
-            String coll = "product";
+    public Product getProductById(Integer productId) {
+        String bucket = "ClickAndCollect";
+        String scope = "repository";
+        String coll = "product";
 
-            // ✅ Requête N1QL : sélectionne tous les documents de la collection
-            String query = String.format(
-                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr  FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c WHERE p.id = "
-                            + productId + " ORDER BY p.id",
-                    bucket, scope, coll);
-            System.out.println(query);
+        // ✅ Requête N1QL : sélectionne tous les documents de la collection
+        String query = String.format(
+                "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr  FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c WHERE p.id = "
+                        + productId + " ORDER BY p.id",
+                bucket, scope, coll);
+        System.out.println(query);
 
-            QueryResult result = cluster.query(query);
+        QueryResult result = cluster.query(query);
+        List<JsonObject> rows = result.rowsAsObject();
 
-            // ✅ Parcours des résultats et conversion en objets Product
-            JsonObject json = result.rowsAsObject().get(0);
-            Product p = new Product();
-            p.setId(json.getInt("id")); // si ton document contient un champ "id"
-            p.setName(json.getString("name"));
-            p.setpriceIncludingTax(json.getDouble("priceIncludingTax"));
-            p.setVatType(json.getString("vatType"));
-            p.setType(json.getString("type"));
-            p.setCategoryId(json.getString("categoryId"));
-            p.setCategoryName_fr(json.getString("categoryName_fr"));
+        // ✅ Parcours des résultats et conversion en objets Product
+        
+        if (rows == null || rows.isEmpty()) {
+            throw new RuntimeException("Aucun produit trouvé avec l'id " + productId);
+        }
+        JsonObject json = rows.get(0);
+        Product p = new Product();
+        p.setId(json.getInt("id")); // si ton document contient un champ "id"
+        p.setName(json.getString("name"));
+        p.setpriceIncludingTax(json.getDouble("priceIncludingTax"));
+        p.setVatType(json.getString("vatType"));
+        p.setType(json.getString("type"));
+        p.setCategoryId(json.getString("categoryId"));
+        p.setCategoryName_fr(json.getString("categoryName_fr"));
 
-            return p;
+        return p;
     }
 }

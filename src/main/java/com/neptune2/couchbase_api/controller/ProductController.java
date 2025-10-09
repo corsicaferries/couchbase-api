@@ -7,14 +7,14 @@ import com.couchbase.client.java.json.JsonObject;
 import com.couchbase.client.java.kv.GetResult;
 import com.couchbase.client.java.Collection;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
-
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
-        private final CouchbaseScopeService couchbaseScopeService;
+    private final CouchbaseScopeService couchbaseScopeService;
     private final ProductService service;
 
     public ProductController(CouchbaseScopeService couchbaseScopeService, ProductService service) {
@@ -24,29 +24,14 @@ public class ProductController {
 
     // ✅ GET : lire un produit par ID
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Integer id) {
-        /* 
-        Collection collection = couchbaseScopeService.getRepositoryCollection();
-        GetResult result = collection.get(String.valueOf(id));
-        JsonObject json = result.contentAsObject();
+    public ResponseEntity<Product> getProductById(@PathVariable Integer id) {
+        Product product = service.getProductById(id);
+        return ResponseEntity.ok(product);
 
-        Product product = new Product();
-        product.setId(id);
-        product.setName(json.getString("name"));
-        product.setpriceIncludingTax(json.getDouble("priceIncludingTax"));
-        */
-        
-        /*
-        Product product = new Product();
-        return product;
-        */
-        return service.getProductById(id);
-        
     }
 
-    
     @GetMapping
     public List<Product> getSomeProducts() {
-        return service.getRepositoryProducts();        
-    }        
+        return service.getRepositoryProducts();
+    }
 }
