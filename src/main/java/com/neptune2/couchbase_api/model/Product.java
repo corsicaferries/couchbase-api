@@ -13,6 +13,15 @@ public class Product {
     private String type;
     private String categoryId;
     private String categoryName_fr;
+    private String description_fr;
+
+    public String getDescription_fr() {
+        return description_fr;
+    }
+
+    public void setDescription_fr(String description_fr) {
+        this.description_fr = description_fr;
+    }
 
     public String getVatType() {
         return vatType;

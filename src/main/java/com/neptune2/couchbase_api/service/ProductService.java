@@ -49,7 +49,7 @@ public class ProductService {
                 p.setType(row.getString("type"));
                 p.setCategoryId(row.getString("categoryId"));
                 p.setCategoryName_fr(row.getString("categoryName_fr"));
-
+                p.setDescription_fr(row.getString("description_fr"));
                 products.add(p);
             });
 
@@ -68,7 +68,7 @@ public class ProductService {
 
         // ✅ Requête N1QL : sélectionne tous les documents de la collection
         String query = String.format(
-                "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr  FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c WHERE p.id = "
+                "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr,c.description.fr as description_fr  FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c WHERE p.id = "
                         + productId + " ORDER BY p.id",
                 bucket, scope, coll);
         System.out.println(query);
@@ -90,7 +90,7 @@ public class ProductService {
         p.setType(json.getString("type"));
         p.setCategoryId(json.getString("categoryId"));
         p.setCategoryName_fr(json.getString("categoryName_fr"));
-
+        p.setDescription_fr(json.getString("description_fr"));
         return p;
     }
 }

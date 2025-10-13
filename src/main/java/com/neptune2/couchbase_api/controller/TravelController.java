@@ -23,10 +23,19 @@ public class TravelController {
     // GET /api/travels → liste tous les voyages
     @RequestMapping("/travels")
     public List<TravelOUT> getTravels(@RequestBody Map<String, Object> request) {
+
         int codNavi = (int) request.get("cod_navi");
+        System.out.println("codNavi=" + codNavi);
+        
         String dateDebut = (String) request.get("date_debut");
         String dateFin = (String) request.get("date_fin");
-
+        /*
+         * if (request.get("cod_navi").toString() = null) {
+         * codNavi = 19;
+         * dateDebut = "2025-07-01";
+         * dateFin = "2025-07-01";
+         * }
+         */
         return travelService.findAllTravels(codNavi, dateDebut, dateFin);
 
     }
