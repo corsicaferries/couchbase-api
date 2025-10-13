@@ -7,7 +7,6 @@ import com.couchbase.client.core.deps.com.fasterxml.jackson.annotation.JsonIgnor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Tax {
 
-    private String _class;
     private String id;
     private String arrivalCountryId;
     private String departureCountryId;
@@ -17,9 +16,8 @@ public class Tax {
     public Tax() {
     }
 
-    public Tax(String _class, String id, String arrivalCountryId, String departureCountryId,
+    public Tax(String id, String arrivalCountryId, String departureCountryId,
             Map<String, Double> rates) {
-        this._class = _class;
         this.id = id;
         this.arrivalCountryId = arrivalCountryId;
         this.departureCountryId = departureCountryId;
@@ -68,13 +66,5 @@ public class Tax {
                 ", departureCountryId='" + departureCountryId + '\'' +
                 ", rates=" + rates +
                 '}';
-    }
-
-    public String get_class() {
-        return _class;
-    }
-
-    public void set_class(String _class) {
-        this._class = _class;
     }
 }

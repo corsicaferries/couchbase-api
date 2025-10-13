@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/travels")
+@RequestMapping("/api")
 public class TravelController {
 
     @Autowired
@@ -18,10 +19,16 @@ public class TravelController {
     public TravelController(TravelService travelService) {
         this.travelService = travelService;
     }
+
     // GET /api/travels → liste tous les voyages
-    @GetMapping
-    public List<TravelOUT> getAllTravels() {
-        return travelService.findAllTravels();
+    @RequestMapping("/travels")
+    public List<TravelOUT> getTravels(@RequestBody Map<String, Object> request) {
+        int codNavi = (int) request.get("cod_navi");
+        String dateDebut = (String) request.get("date_debut");
+        String dateFin = (String) request.get("date_fin");
+
+        return travelService.findAllTravels(codNavi, dateDebut, dateFin);
+
     }
 
     @GetMapping("/ship/{name}")

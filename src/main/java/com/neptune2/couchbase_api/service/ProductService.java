@@ -32,7 +32,7 @@ public class ProductService {
 
             // ✅ Requête N1QL : sélectionne tous les documents de la collection
             String query = String.format(
-                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr  FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c WHERE p.id = 10034 ORDER BY p.id",
+                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr  FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c ORDER BY p.id",
                     bucket, scope, coll);
 
             System.out.println(query);
@@ -77,7 +77,7 @@ public class ProductService {
         List<JsonObject> rows = result.rowsAsObject();
 
         // ✅ Parcours des résultats et conversion en objets Product
-        
+
         if (rows == null || rows.isEmpty()) {
             throw new RuntimeException("Aucun produit trouvé avec l'id " + productId);
         }

@@ -4,7 +4,7 @@ public class TravelOUT {
     private Line line;
     private Ship ship;
     private Departure departure;
-    private String taxId;
+    // private String taxId;
     private Tax tax;
 
     public Line getLine() {
@@ -31,14 +31,15 @@ public class TravelOUT {
         this.departure = departure;
     }
 
-    public String getTaxId() {
-        return taxId;
-    }
-
-    public void setTaxId(String taxId) {
-        this.taxId = taxId;
-    }
-
+    /*
+     * public String getTaxId() {
+     * return taxId;
+     * }
+     * 
+     * public void setTaxId(String taxId) {
+     * this.taxId = taxId;
+     * }
+     */
     public Tax getTax() {
         return tax;
     }

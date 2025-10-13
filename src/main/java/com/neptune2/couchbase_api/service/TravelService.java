@@ -44,7 +44,7 @@ public class TravelService {
     }
 
     // Récupérer tous les voyages
-    public List<TravelOUT> findAllTravels() {
+    public List<TravelOUT> findAllTravels(int codNavi, String dateDebut, String dateFin) {
         String apiUrl = "https://putty.corsicaferries.com/api/consultation-api/list_voyages_neptune"; // API externe
 
         HttpHeaders headers = new HttpHeaders();
@@ -53,9 +53,9 @@ public class TravelService {
                                                                                                       // d’authentification
         List<Map<String, Object>> requestBody = List.of(
                 Map.of(
-                        "cod_navi", 19,
-                        "date_debut", "2025-07-01",
-                        "date_fin", "2025-07-01"));
+                        "cod_navi", codNavi,
+                        "date_debut", dateDebut,
+                        "date_fin", dateFin));
 
         HttpEntity<List<Map<String, Object>>> request = new HttpEntity<>(requestBody, headers);
 
@@ -71,7 +71,7 @@ public class TravelService {
                         dto.setLine(travel.getLine());
                         dto.setShip(travel.getShip());
                         dto.setDeparture(travel.getDeparture());
-                        dto.setTaxId(travel.getTaxId());
+                        // dto.setTaxId(travel.getTaxId());
 
                         // Récupérer le tax depuis Couchbase
                         try {
@@ -81,25 +81,25 @@ public class TravelService {
 
                             GetResult taxResult = taxCollection.get(travel.getTaxId());
                             System.out.println("taxResult récupéré : " + taxResult.contentAsObject());
-                            try {
-                                Tax tax = mapper.convertValue(taxResult.contentAsObject(), Tax.class);
-                                dto.setTax(tax);
+                            ObjectMapper innerMapper = new ObjectMapper();
+                            innerMapper.configure(
+                                    com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                                    false);
 
-                            } catch (Exception e) {
-                                System.out.println("Erreur lors de la récupération du document : " + e.getMessage());
-                            }
+                            Tax tax = innerMapper.convertValue(taxResult.contentAsObject().toMap(), Tax.class);
+                            dto.setTax(tax);
 
                         } catch (Exception e) {
-                            // si tax non trouvé,
-                            System.out.println("je suis laaaaaaaaaa");
+                            System.out.println("Erreur lors de la récupération du document : " + e.getMessage());
                             dto.setTax(null);
                         }
-
                         return dto;
                     })
                     .toList();
 
-        } catch (Exception e) {
+        } catch (
+
+        Exception e) {
             throw new RuntimeException("Erreur lors de l'appel à l'API externe : " + e.getMessage());
         }
     }
