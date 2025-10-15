@@ -24,6 +24,15 @@ public class Product {
     private String description_fr;
     private List<Allergen> allergens;
     private JsonArray allergensJson;
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public String getCategorydescription_fr() {
         return categorydescription_fr;

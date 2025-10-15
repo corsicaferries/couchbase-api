@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.couchbase.client.java.Cluster;
 import com.neptune2.couchbase_api.model.Allergen;
 import com.neptune2.couchbase_api.model.Product;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,6 +24,8 @@ public class ProductService {
     private final CouchbaseScopeService scopeService;
     private final Cluster cluster;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    @Value("${image.url}")
+    private String imageUrl;
 
     public ProductService(CouchbaseScopeService scopeService, Cluster cluster) {
         this.scopeService = scopeService;
@@ -81,7 +85,7 @@ public class ProductService {
                     // Pas d’allergènes : tu peux laisser la liste vide ou null selon ton design
                     p.setAllergens(List.of());
                 }
-
+                p.setImageUrl(imageUrl + p.getId() + ".png");
                 products.add(p);
             });
 
@@ -144,6 +148,8 @@ public class ProductService {
             // Pas d’allergènes : tu peux laisser la liste vide ou null selon ton design
             p.setAllergens(List.of());
         }
+
+        p.setImageUrl(imageUrl + p.getId() + ".png");
         return p;
     }
 }
