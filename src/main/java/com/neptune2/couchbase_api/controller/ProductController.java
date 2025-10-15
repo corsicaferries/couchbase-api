@@ -3,6 +3,8 @@ package com.neptune2.couchbase_api.controller;
 import com.neptune2.couchbase_api.model.Product;
 import com.neptune2.couchbase_api.service.CouchbaseScopeService;
 import com.neptune2.couchbase_api.service.ProductService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
@@ -26,8 +28,24 @@ public class ProductController {
 
     }
 
+    // ✅ GET : lire tous les produits
     @GetMapping
     public List<Product> getSomeProducts() {
         return service.getRepositoryProducts();
+    }
+
+    // ✅ GET : lire un produit par code sous sous famille :ID
+    @GetMapping("/ssfa/{id}")
+    public ResponseEntity<?> getProductByssfa(@PathVariable Integer id) {
+        List<Product> products = service.getProductsByssfa(id);
+        if (products.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of(
+                            "status", 404,
+                            "message", "Aucun produit trouvé pour num_ssfa = " + id));
+        }
+
+        return ResponseEntity.ok(products);
+
     }
 }
