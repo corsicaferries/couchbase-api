@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
+@SuppressWarnings("unused")
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -48,4 +49,20 @@ public class ProductController {
         return ResponseEntity.ok(products);
 
     }
+
+    // ✅ GET : lire un produit par code sous sous famille :ID
+    @GetMapping("/type/{type}")
+    public ResponseEntity<?> getProductByType(@PathVariable String type) {
+        List<Product> products = service.getProductsByType(type);
+        if (products.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of(
+                            "status", 404,
+                            "message", "Aucun produit trouvé pour ce type product = " + type));
+        }
+
+        return ResponseEntity.ok(products);
+
+    }
+
 }

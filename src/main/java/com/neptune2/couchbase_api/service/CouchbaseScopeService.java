@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import com.couchbase.client.java.Collection;
 
+@SuppressWarnings("unused")
 @Service
 public class CouchbaseScopeService {
 

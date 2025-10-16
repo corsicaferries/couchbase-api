@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.couchbase.client.java.json.JsonObject;
 
+@SuppressWarnings("unused")
 @Service
 public class ProductService {
 
@@ -227,6 +228,90 @@ public class ProductService {
                 throw new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Aucun produit trouvé pour num_ssfa = " + num_ssfa);
+            }
+
+            // ✅ Parcours des résultats et conversion en objets Product
+            result.rowsAsObject().forEach(row -> {
+                Product p = new Product();
+                p.setId(row.getInt("id")); // si ton document contient un champ "id"
+                p.setName(row.getString("name"));
+                p.setpriceIncludingTax(row.getDouble("priceIncludingTax"));
+                p.setVatType(String.valueOf(row.get("vatType")));
+                // p.setVatType(row.getString("vatType"));
+                p.setType(row.getString("type"));
+                p.setCategoryId(row.getString("categoryId"));
+                p.setCategoryName_fr(row.getString("categoryName_fr"));
+                p.setCategorydescription_fr(row.getString("categorydescription_fr"));
+                p.setDescription_fr(row.getString("description_fr"));
+                // p.setAllergens(row.getString("allergens"));
+
+                p.setType(row.getString("typ_prod"));
+                p.setNum_fami(row.getInt("num_fami"));
+                p.setNum_sfam(row.getInt("num_sfam"));
+                p.setNum_ssfa(row.getInt("num_ssfa"));
+                p.setGencod(row.getString("cod_prog"));
+                p.setImageUrl(imageUrl + p.getId() + ".png");
+
+                com.couchbase.client.java.json.JsonArray allergensArray = row.getArray("allergens");
+                if (allergensArray != null) {
+                    // Convertir JsonArray en chaîne JSON
+                    String allergensJsonString = allergensArray.toString();
+                    // System.out.println("allergenJsonString=" + allergensJsonString);
+                    try {
+                        TypeFactory tf = objectMapper.getTypeFactory();
+                        List<Allergen> allergensList = objectMapper.readValue(
+                                allergensJsonString,
+                                tf.constructCollectionType(List.class, Allergen.class));
+                        // System.out.println("DEBUG allergensList parsed = " + allergensList);
+                        p.setAllergens(allergensList);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Erreur de parsing du champ allergens JSON", e);
+                    }
+                } else {
+                    // Pas d’allergènes : tu peux laisser la liste vide ou null selon ton design
+                    p.setAllergens(List.of());
+                }
+                p.setImageUrl(imageUrl + p.getId() + ".png");
+                products.add(p);
+            });
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de la récupération des produits : " + e.getMessage());
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    public List<Product> getProductsByType(String typeProduct) {
+        List<Product> products = new ArrayList<>();
+
+        try {
+            // Récupération des éléments nécessaires
+            // Collection collection = scopeService.getRepositoryCollection();
+
+            String bucket = "ClickAndCollect";
+            String scope = "repository";
+            String coll = "product";
+
+            // ✅ Requête N1QL : sélectionne tous les documents de la collection
+            /*
+             * String query = String.format(
+             * "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr,c.description.fr as category_description_fr, p.description.fr as description_fr, p.allergens AS allergens FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c WHERE p.num_ssfa="
+             * + num_ssfa + " ORDER BY p.id",
+             * bucket, scope, coll);
+             */
+            String query = String.format(
+                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.num_sfam,p.familles.num_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p WHERE p.typ_prod=\""
+                            + typeProduct + "\" ORDER BY p.id",
+                    bucket, scope, coll);
+
+            System.out.println(query);
+            QueryResult result = cluster.query(query);
+
+            if (result.rowsAsObject().isEmpty()) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Aucun produit trouvé pour le type produit = " + typeProduct);
             }
 
             // ✅ Parcours des résultats et conversion en objets Product

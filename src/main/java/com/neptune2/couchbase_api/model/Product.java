@@ -10,6 +10,7 @@ import org.springframework.data.couchbase.core.mapping.Document;
 import com.couchbase.client.java.json.JsonArray;
 import com.couchbase.client.java.json.JsonObject;
 
+@SuppressWarnings("unused")
 @Document
 public class Product {
     @Id

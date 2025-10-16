@@ -5,6 +5,7 @@ import com.neptune2.couchbase_api.model.TravelOUT;
 import com.neptune2.couchbase_api.repository.TravelRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -27,7 +28,7 @@ import org.springframework.http.HttpMethod;
 import com.neptune2.couchbase_api.model.Tax;
 
 // Import JsonObject from Couchbase SDK
-
+@SuppressWarnings("unused")
 @Service
 public class TravelService {
     @Autowired
@@ -60,7 +61,8 @@ public class TravelService {
         HttpEntity<List<Map<String, Object>>> request = new HttpEntity<>(requestBody, headers);
 
         try {
-            ResponseEntity<Map> response = restTemplate.exchange(apiUrl, HttpMethod.POST, request, Map.class);
+            ResponseEntity<Map> response = restTemplate.exchange(apiUrl, HttpMethod.POST,
+                    request, Map.class);
             List<Map<String, Object>> data = (List<Map<String, Object>>) response.getBody().get("data");
 
             ObjectMapper mapper = new ObjectMapper();
