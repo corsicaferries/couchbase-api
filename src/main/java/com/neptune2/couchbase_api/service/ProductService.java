@@ -46,8 +46,14 @@ public class ProductService {
             String coll = "product";
 
             // ✅ Requête N1QL : sélectionne tous les documents de la collection
+            /*
+             * String query = String.format(
+             * "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr,c.description.fr as category_description_fr, p.description.fr as description_fr, p.allergens AS allergens FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c ORDER BY p.id"
+             * ,
+             * bucket, scope, coll);
+             */
             String query = String.format(
-                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr,c.description.fr as category_description_fr, p.description.fr as description_fr, p.allergens AS allergens FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c ORDER BY p.id",
+                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.num_sfam,p.familles.num_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p ORDER BY p.id",
                     bucket, scope, coll);
 
             System.out.println(query);
@@ -60,7 +66,8 @@ public class ProductService {
                 p.setId(row.getInt("id")); // si ton document contient un champ "id"
                 p.setName(row.getString("name"));
                 p.setpriceIncludingTax(row.getDouble("priceIncludingTax"));
-                p.setVatType(row.getString("vatType"));
+                p.setVatType(String.valueOf(row.get("vatType")));
+                // p.setVatType(row.getString("vatType"));
                 p.setType(row.getString("type"));
                 p.setCategoryId(row.getString("categoryId"));
                 p.setCategoryName_fr(row.getString("categoryName_fr"));
@@ -87,6 +94,12 @@ public class ProductService {
                     // Pas d’allergènes : tu peux laisser la liste vide ou null selon ton design
                     p.setAllergens(List.of());
                 }
+                p.setType(row.getString("typ_prod"));
+                p.setNum_fami(row.getInt("num_fami"));
+                p.setNum_sfam(row.getInt("num_sfam"));
+                p.setNum_ssfa(row.getInt("num_ssfa"));
+                p.setGencod(row.getString("cod_prog"));
+
                 p.setImageUrl(imageUrl + p.getId() + ".png");
                 products.add(p);
             });
@@ -105,10 +118,31 @@ public class ProductService {
         String coll = "product";
 
         // ✅ Requête N1QL : sélectionne tous les documents de la collection
+        /*
+         * SELECT
+         * vatType,
+         * name.fr,
+         * name.en,
+         * name.it,
+         * _class,
+         * id,
+         * typ_prod,
+         * familles.num_fami,
+         * familles.num_sfam,
+         * familles.num_ssfa,
+         * cod_prog,
+         * priceIncludingTax
+         */
         String query = String.format(
-                "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr,c.description.fr as category_description_fr, p.description.fr as description_fr, p.allergens AS allergens FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c WHERE p.id = "
+                "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.num_sfam,p.familles.num_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p WHERE p.id="
                         + productId + " ORDER BY p.id",
                 bucket, scope, coll);
+        /*
+         * String query = String.format(
+         * "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr,c.description.fr as category_description_fr, p.description.fr as description_fr, p.allergens AS allergens FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c WHERE p.id = "
+         * + productId + " ORDER BY p.id",
+         * bucket, scope, coll);
+         */
         System.out.println(query);
 
         QueryResult result = cluster.query(query);
@@ -124,7 +158,8 @@ public class ProductService {
         p.setId(json.getInt("id")); // si ton document contient un champ "id"
         p.setName(json.getString("name"));
         p.setpriceIncludingTax(json.getDouble("priceIncludingTax"));
-        p.setVatType(json.getString("vatType"));
+        p.setVatType(String.valueOf(json.get("vatType")));
+        // p.setVatType(json.getString("vatType"));
         p.setType(json.getString("type"));
         p.setCategoryId(json.getString("categoryId"));
         p.setCategoryName_fr(json.getString("categoryName_fr"));
@@ -151,7 +186,14 @@ public class ProductService {
             p.setAllergens(List.of());
         }
 
+        p.setType(json.getString("typ_prod"));
+        p.setNum_fami(json.getInt("num_fami"));
+        p.setNum_sfam(json.getInt("num_sfam"));
+        p.setNum_ssfa(json.getInt("num_ssfa"));
+        p.setGencod(json.getString("cod_prog"));
+
         p.setImageUrl(imageUrl + p.getId() + ".png");
+
         return p;
     }
 
@@ -167,8 +209,14 @@ public class ProductService {
             String coll = "product";
 
             // ✅ Requête N1QL : sélectionne tous les documents de la collection
+            /*
+             * String query = String.format(
+             * "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr,c.description.fr as category_description_fr, p.description.fr as description_fr, p.allergens AS allergens FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c WHERE p.num_ssfa="
+             * + num_ssfa + " ORDER BY p.id",
+             * bucket, scope, coll);
+             */
             String query = String.format(
-                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.vatType,p.type,c.id AS categoryId,c.name.fr AS categoryName_fr,c.description.fr as category_description_fr, p.description.fr as description_fr, p.allergens AS allergens FROM `%s`.`%s`.`%s` AS p UNNEST p.categories AS c WHERE p.num_ssfa="
+                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.num_sfam,p.familles.num_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p WHERE p.familles.num_ssfa="
                             + num_ssfa + " ORDER BY p.id",
                     bucket, scope, coll);
 
@@ -187,13 +235,21 @@ public class ProductService {
                 p.setId(row.getInt("id")); // si ton document contient un champ "id"
                 p.setName(row.getString("name"));
                 p.setpriceIncludingTax(row.getDouble("priceIncludingTax"));
-                p.setVatType(row.getString("vatType"));
+                p.setVatType(String.valueOf(row.get("vatType")));
+                // p.setVatType(row.getString("vatType"));
                 p.setType(row.getString("type"));
                 p.setCategoryId(row.getString("categoryId"));
                 p.setCategoryName_fr(row.getString("categoryName_fr"));
                 p.setCategorydescription_fr(row.getString("categorydescription_fr"));
                 p.setDescription_fr(row.getString("description_fr"));
                 // p.setAllergens(row.getString("allergens"));
+
+                p.setType(row.getString("typ_prod"));
+                p.setNum_fami(row.getInt("num_fami"));
+                p.setNum_sfam(row.getInt("num_sfam"));
+                p.setNum_ssfa(row.getInt("num_ssfa"));
+                p.setGencod(row.getString("cod_prog"));
+                p.setImageUrl(imageUrl + p.getId() + ".png");
 
                 com.couchbase.client.java.json.JsonArray allergensArray = row.getArray("allergens");
                 if (allergensArray != null) {

@@ -25,6 +25,51 @@ public class Product {
     private List<Allergen> allergens;
     private JsonArray allergensJson;
     private String imageUrl;
+    private String type_product;
+    private Integer num_fami;
+    private Integer num_sfam;
+    private Integer num_ssfa;
+    private String gencod;
+
+    public String getType_product() {
+        return type_product;
+    }
+
+    public void setType_product(String type_product) {
+        this.type_product = type_product;
+    }
+
+    public Integer getNum_fami() {
+        return num_fami;
+    }
+
+    public void setNum_fami(Integer num_fami) {
+        this.num_fami = num_fami;
+    }
+
+    public Integer getNum_sfam() {
+        return num_sfam;
+    }
+
+    public void setNum_sfam(Integer num_sfam) {
+        this.num_sfam = num_sfam;
+    }
+
+    public Integer getNum_ssfa() {
+        return num_ssfa;
+    }
+
+    public void setNum_ssfa(Integer num_ssfa) {
+        this.num_ssfa = num_ssfa;
+    }
+
+    public String getGencod() {
+        return gencod;
+    }
+
+    public void setGencod(String gencod) {
+        this.gencod = gencod;
+    }
 
     public String getImageUrl() {
         return imageUrl;
