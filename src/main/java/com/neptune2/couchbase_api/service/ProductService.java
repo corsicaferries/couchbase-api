@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import com.couchbase.client.java.Cluster;
 import com.neptune2.couchbase_api.model.Allergen;
+import com.neptune2.couchbase_api.model.Familles;
 import com.neptune2.couchbase_api.model.Product;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -54,7 +55,7 @@ public class ProductService {
              * bucket, scope, coll);
              */
             String query = String.format(
-                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.num_sfam,p.familles.num_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p ORDER BY p.id",
+                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.lib_fami,p.familles.num_sfam,p.familles.lib_sfam,p.familles.num_ssfa,p.familles.lib_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p ORDER BY p.id",
                     bucket, scope, coll);
 
             System.out.println(query);
@@ -69,7 +70,7 @@ public class ProductService {
                 p.setpriceIncludingTax(row.getDouble("priceIncludingTax"));
                 p.setVatType(String.valueOf(row.get("vatType")));
                 // p.setVatType(row.getString("vatType"));
-                p.setType(row.getString("type"));
+                p.setType_product(row.getString("type"));
                 p.setCategoryId(row.getString("categoryId"));
                 p.setCategoryName_fr(row.getString("categoryName_fr"));
                 p.setCategorydescription_fr(row.getString("categorydescription_fr"));
@@ -95,10 +96,16 @@ public class ProductService {
                     // Pas d’allergènes : tu peux laisser la liste vide ou null selon ton design
                     p.setAllergens(List.of());
                 }
-                p.setType(row.getString("typ_prod"));
-                p.setNum_fami(row.getInt("num_fami"));
-                p.setNum_sfam(row.getInt("num_sfam"));
-                p.setNum_ssfa(row.getInt("num_ssfa"));
+                p.settypeDeProduit(row.getString("typ_prod"));
+                Familles familles = new Familles();
+                familles.setcodeFamille(row.getInt("num_fami"));
+                familles.setlibelleFamille(row.getString("lib_fami").trim());
+                familles.setcodeSousFamille(row.getInt("num_sfam"));
+                familles.setlibelleSousFamille(row.getString("lib_sfam").trim());
+                familles.setcodeSousSousFamille(row.getInt("num_ssfa"));
+                familles.setlibelleSousSousFamille(row.getString("lib_ssfa").trim());
+                p.setFamilles(familles);
+                p.setFamilles(familles);
                 p.setGencod(row.getString("cod_prog"));
 
                 p.setImageUrl(imageUrl + p.getId() + ".png");
@@ -135,7 +142,7 @@ public class ProductService {
          * priceIncludingTax
          */
         String query = String.format(
-                "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.num_sfam,p.familles.num_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p WHERE p.id="
+                "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.lib_fami,p.familles.num_sfam,p.familles.lib_sfam,p.familles.num_ssfa,p.familles.lib_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p WHERE p.id="
                         + productId + " ORDER BY p.id",
                 bucket, scope, coll);
         /*
@@ -161,7 +168,7 @@ public class ProductService {
         p.setpriceIncludingTax(json.getDouble("priceIncludingTax"));
         p.setVatType(String.valueOf(json.get("vatType")));
         // p.setVatType(json.getString("vatType"));
-        p.setType(json.getString("type"));
+        p.setType_product(json.getString("type"));
         p.setCategoryId(json.getString("categoryId"));
         p.setCategoryName_fr(json.getString("categoryName_fr"));
         p.setCategorydescription_fr(json.getString("categorydescription_fr"));
@@ -187,10 +194,16 @@ public class ProductService {
             p.setAllergens(List.of());
         }
 
-        p.setType(json.getString("typ_prod"));
-        p.setNum_fami(json.getInt("num_fami"));
-        p.setNum_sfam(json.getInt("num_sfam"));
-        p.setNum_ssfa(json.getInt("num_ssfa"));
+        p.settypeDeProduit(json.getString("typ_prod"));
+        Familles familles = new Familles();
+        familles.setcodeFamille(json.getInt("num_fami"));
+        familles.setlibelleFamille(json.getString("lib_fami").trim());
+        familles.setcodeSousFamille(json.getInt("num_sfam"));
+        familles.setlibelleSousFamille(json.getString("lib_sfam").trim());
+        familles.setcodeSousSousFamille(json.getInt("num_ssfa"));
+        familles.setlibelleSousSousFamille(json.getString("lib_ssfa").trim());
+        p.setFamilles(familles);
+
         p.setGencod(json.getString("cod_prog"));
 
         p.setImageUrl(imageUrl + p.getId() + ".png");
@@ -217,7 +230,7 @@ public class ProductService {
              * bucket, scope, coll);
              */
             String query = String.format(
-                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.num_sfam,p.familles.num_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p WHERE p.familles.num_ssfa="
+                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.lib_fami,p.familles.num_sfam,p.familles.lib_sfam,p.familles.num_ssfa,p.familles.lib_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p WHERE p.familles.num_ssfa="
                             + num_ssfa + " ORDER BY p.id",
                     bucket, scope, coll);
 
@@ -238,17 +251,22 @@ public class ProductService {
                 p.setpriceIncludingTax(row.getDouble("priceIncludingTax"));
                 p.setVatType(String.valueOf(row.get("vatType")));
                 // p.setVatType(row.getString("vatType"));
-                p.setType(row.getString("type"));
+                p.setType_product(row.getString("type"));
                 p.setCategoryId(row.getString("categoryId"));
                 p.setCategoryName_fr(row.getString("categoryName_fr"));
                 p.setCategorydescription_fr(row.getString("categorydescription_fr"));
                 p.setDescription_fr(row.getString("description_fr"));
                 // p.setAllergens(row.getString("allergens"));
 
-                p.setType(row.getString("typ_prod"));
-                p.setNum_fami(row.getInt("num_fami"));
-                p.setNum_sfam(row.getInt("num_sfam"));
-                p.setNum_ssfa(row.getInt("num_ssfa"));
+                p.settypeDeProduit(row.getString("typ_prod"));
+                Familles familles = new Familles();
+                familles.setcodeFamille(row.getInt("num_fami"));
+                familles.setlibelleFamille(row.getString("lib_fami").trim());
+                familles.setcodeSousFamille(row.getInt("num_sfam"));
+                familles.setlibelleSousFamille(row.getString("lib_sfam").trim());
+                familles.setcodeSousSousFamille(row.getInt("num_ssfa"));
+                familles.setlibelleSousSousFamille(row.getString("lib_ssfa").trim());
+                p.setFamilles(familles);
                 p.setGencod(row.getString("cod_prog"));
                 p.setImageUrl(imageUrl + p.getId() + ".png");
 
@@ -301,7 +319,7 @@ public class ProductService {
              * bucket, scope, coll);
              */
             String query = String.format(
-                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.num_sfam,p.familles.num_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p WHERE p.typ_prod=\""
+                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.lib_fami,p.familles.num_sfam,p.familles.lib_sfam,p.familles.num_ssfa,p.familles.lib_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p WHERE p.typ_prod=\""
                             + typeProduct + "\" ORDER BY p.id",
                     bucket, scope, coll);
 
@@ -322,17 +340,22 @@ public class ProductService {
                 p.setpriceIncludingTax(row.getDouble("priceIncludingTax"));
                 p.setVatType(String.valueOf(row.get("vatType")));
                 // p.setVatType(row.getString("vatType"));
-                p.setType(row.getString("type"));
+                p.setType_product(row.getString("type"));
                 p.setCategoryId(row.getString("categoryId"));
                 p.setCategoryName_fr(row.getString("categoryName_fr"));
                 p.setCategorydescription_fr(row.getString("categorydescription_fr"));
                 p.setDescription_fr(row.getString("description_fr"));
                 // p.setAllergens(row.getString("allergens"));
 
-                p.setType(row.getString("typ_prod"));
-                p.setNum_fami(row.getInt("num_fami"));
-                p.setNum_sfam(row.getInt("num_sfam"));
-                p.setNum_ssfa(row.getInt("num_ssfa"));
+                p.settypeDeProduit(row.getString("typ_prod"));
+                Familles familles = new Familles();
+                familles.setcodeFamille(row.getInt("num_fami"));
+                familles.setlibelleFamille(row.getString("lib_fami").trim());
+                familles.setcodeSousFamille(row.getInt("num_sfam"));
+                familles.setlibelleSousFamille(row.getString("lib_sfam").trim());
+                familles.setcodeSousSousFamille(row.getInt("num_ssfa"));
+                familles.setlibelleSousSousFamille(row.getString("lib_ssfa").trim());
+                p.setFamilles(familles);
                 p.setGencod(row.getString("cod_prog"));
                 p.setImageUrl(imageUrl + p.getId() + ".png");
 

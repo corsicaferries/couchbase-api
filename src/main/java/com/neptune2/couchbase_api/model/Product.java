@@ -18,7 +18,7 @@ public class Product {
     private String name;
     private double priceIncludingTax;
     private String vatType;
-    private String type;
+    private String typeDeProduit;
     private String categoryId;
     private String categoryName_fr;
     private String categorydescription_fr;
@@ -26,42 +26,24 @@ public class Product {
     private List<Allergen> allergens;
     private JsonArray allergensJson;
     private String imageUrl;
-    private String type_product;
-    private Integer num_fami;
-    private Integer num_sfam;
-    private Integer num_ssfa;
+    private String typeProduct;
+    private Familles familles;
     private String gencod;
 
-    public String getType_product() {
-        return type_product;
+    public Familles getFamilles() {
+        return familles;
     }
 
-    public void setType_product(String type_product) {
-        this.type_product = type_product;
+    public void setFamilles(Familles familles) {
+        this.familles = familles;
     }
 
-    public Integer getNum_fami() {
-        return num_fami;
+    public String getTypeProduct() {
+        return typeProduct;
     }
 
-    public void setNum_fami(Integer num_fami) {
-        this.num_fami = num_fami;
-    }
-
-    public Integer getNum_sfam() {
-        return num_sfam;
-    }
-
-    public void setNum_sfam(Integer num_sfam) {
-        this.num_sfam = num_sfam;
-    }
-
-    public Integer getNum_ssfa() {
-        return num_ssfa;
-    }
-
-    public void setNum_ssfa(Integer num_ssfa) {
-        this.num_ssfa = num_ssfa;
+    public void setType_product(String typeProduct) {
+        this.typeProduct = typeProduct;
     }
 
     public String getGencod() {
@@ -139,12 +121,12 @@ public class Product {
         this.vatType = vatType;
     }
 
-    public String getType() {
-        return type;
+    public String gettypeDeProduit() {
+        return typeDeProduit;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void settypeDeProduit(String typeDeProduit) {
+        this.typeDeProduit = typeDeProduit;
     }
 
     public String getCategoryId() {
