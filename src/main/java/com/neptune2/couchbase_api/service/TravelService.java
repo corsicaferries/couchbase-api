@@ -52,11 +52,27 @@ public class TravelService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-API-KEY", "teNQ1wqyuVEgXwxxbLryTxzcyf9NP3BhN9YKe25XUB3rx8FJK4phvxGjk6TXvdrD"); // <-- ta variable
                                                                                                       // d’authentification
-        List<Map<String, Object>> requestBody = List.of(
-                Map.of(
-                        "cod_navi", codNavi,
-                        "date_debut", dateDebut,
-                        "date_fin", dateFin));
+        /*
+         * /
+         * List<Map<String, Object>> requestBody = List.of(
+         * Map.of(
+         * "cod_navi", codNavi,
+         * "date_debut", dateDebut,
+         * "date_fin", dateFin));
+         */
+        List<Map<String, Object>> requestBody;
+
+        if (dateDebut != null && dateFin != null) {
+            // Créer le body seulement si tous les paramètres ne sont pas nuls
+            requestBody = List.of(
+                    Map.of(
+                            "cod_navi", codNavi,
+                            "date_debut", dateDebut,
+                            "date_fin", dateFin));
+        } else {
+            // Si l'un des paramètres est nul, body vide
+            requestBody = List.of();
+        }
 
         HttpEntity<List<Map<String, Object>>> request = new HttpEntity<>(requestBody, headers);
 

@@ -22,20 +22,33 @@ public class TravelController {
 
     // GET /api/travels → liste tous les voyages
     @RequestMapping("/travels")
-    public List<TravelOUT> getTravels(@RequestBody Map<String, Object> request) {
+    public List<TravelOUT> getTravels(@RequestBody(required = false) Map<String, Object> request) {
+        int codNavi = 0;
+        String dateDebut = null;
+        String dateFin = null;
+        // Vérifier si "cod_navi", "date_debut", ou "date_fin" sont présents dans la
+        // requête
+        if (request != null) {
+            codNavi = (int) request.get("cod_navi");
+            dateDebut = (String) request.get("date_debut");
+            dateFin = (String) request.get("date_fin");
 
-        int codNavi = (int) request.get("cod_navi");
-        System.out.println("codNavi=" + codNavi);
-        
-        String dateDebut = (String) request.get("date_debut");
-        String dateFin = (String) request.get("date_fin");
-        /*
-         * if (request.get("cod_navi").toString() = null) {
-         * codNavi = 19;
-         * dateDebut = "2025-07-01";
-         * dateFin = "2025-07-01";
-         * }
-         */
+            if (request.containsKey("cod_navi") && request.get("cod_navi") != null) {
+                codNavi = (int) request.get("cod_navi"); // Assure-toi que la valeur est bien un int
+            }
+
+            if (request.containsKey("date_debut") && request.get("date_debut") != null) {
+                dateDebut = (String) request.get("date_debut"); // Assure-toi que la valeur est une chaîne
+            }
+
+            if (request.containsKey("date_fin") && request.get("date_fin") != null) {
+                dateFin = (String) request.get("date_fin"); // Assure-toi que la valeur est une chaîne
+            }
+        } else {
+            codNavi = 0;
+            dateDebut = null;
+            dateFin = null;
+        }
         return travelService.findAllTravels(codNavi, dateDebut, dateFin);
 
     }
