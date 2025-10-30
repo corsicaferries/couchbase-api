@@ -33,7 +33,7 @@ public class Familles {
         this.codeSousFamille = codeSousFamille;
     }
 
-    public String libelleSousFamille() {
+    public String getlibelleSousFamille() {
         return libelleSousFamille;
     }
 

@@ -105,7 +105,6 @@ public class ProductService {
                 familles.setcodeSousSousFamille(row.getInt("num_ssfa"));
                 familles.setlibelleSousSousFamille(row.getString("lib_ssfa").trim());
                 p.setFamilles(familles);
-                p.setFamilles(familles);
                 p.setGencod(row.getString("cod_prog"));
 
                 p.setImageUrl(imageUrl + p.getId() + ".png");
@@ -203,7 +202,6 @@ public class ProductService {
         familles.setcodeSousSousFamille(json.getInt("num_ssfa"));
         familles.setlibelleSousSousFamille(json.getString("lib_ssfa").trim());
         p.setFamilles(familles);
-
         p.setGencod(json.getString("cod_prog"));
 
         p.setImageUrl(imageUrl + p.getId() + ".png");
