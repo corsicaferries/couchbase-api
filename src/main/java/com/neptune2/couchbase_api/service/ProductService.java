@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import com.couchbase.client.java.json.JsonObject;
@@ -384,6 +387,204 @@ public class ProductService {
             System.err.println("❌ Erreur lors de la récupération des produits : " + e.getMessage());
             e.printStackTrace();
         }
+        return products;
+    }
+
+    public List<Product> getProductsYellows() {
+        List<Product> products = new ArrayList<>();
+
+        try {
+            // Récupération des éléments nécessaires
+            // Collection collection = scopeService.getRepositoryCollection();
+
+            String bucket = "ClickAndCollect";
+            String scope = "repository";
+            String coll = "product";
+
+            // ✅ Requête N1QL : sélectionne tous les documents de la collection
+            String query = String.format(
+                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.lib_fami,p.familles.num_sfam,p.familles.lib_sfam,p.familles.num_ssfa,p.familles.lib_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p WHERE p.familles.num_ssfa in [102701,102704,102707,102709,102711,102713,102715,102718] ORDER BY p.id",
+                    bucket, scope, coll);
+
+            System.out.println(query);
+            QueryResult result = cluster.query(query);
+
+            if (result.rowsAsObject().isEmpty()) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Aucun produit trouvé pour Yellows");
+            }
+
+            // ✅ Parcours des résultats et conversion en objets Product
+            result.rowsAsObject().forEach(row -> {
+                Product p = new Product();
+                p.setId(row.getInt("id")); // si ton document contient un champ "id"
+                p.setName(row.getString("name"));
+                p.setpriceIncludingTax(row.getDouble("priceIncludingTax"));
+                p.setVatType(String.valueOf(row.get("vatType")));
+                // p.setVatType(row.getString("vatType"));
+                p.setType_product(row.getString("type"));
+                p.setCategoryId(row.getString("categoryId"));
+                p.setCategoryName_fr(row.getString("categoryName_fr"));
+                p.setCategorydescription_fr(row.getString("categorydescription_fr"));
+                p.setDescription_fr(row.getString("description_fr"));
+                // p.setAllergens(row.getString("allergens"));
+
+                p.settypeDeProduit(row.getString("typ_prod"));
+                Familles familles = new Familles();
+                familles.setcodeFamille(row.getInt("num_fami"));
+                familles.setlibelleFamille(row.getString("lib_fami").trim());
+                familles.setcodeSousFamille(row.getInt("num_sfam"));
+                familles.setlibelleSousFamille(row.getString("lib_sfam").trim());
+                familles.setcodeSousSousFamille(row.getInt("num_ssfa"));
+                familles.setlibelleSousSousFamille(row.getString("lib_ssfa").trim());
+                p.setFamilles(familles);
+                p.setGencod(row.getString("cod_prog"));
+                p.setImageUrl(imageUrl + p.getId() + ".png");
+
+                com.couchbase.client.java.json.JsonArray allergensArray = row.getArray("allergens");
+                if (allergensArray != null) {
+                    // Convertir JsonArray en chaîne JSON
+                    String allergensJsonString = allergensArray.toString();
+                    // System.out.println("allergenJsonString=" + allergensJsonString);
+                    try {
+                        TypeFactory tf = objectMapper.getTypeFactory();
+                        List<Allergen> allergensList = objectMapper.readValue(
+                                allergensJsonString,
+                                tf.constructCollectionType(List.class, Allergen.class));
+                        // System.out.println("DEBUG allergensList parsed = " + allergensList);
+                        p.setAllergens(allergensList);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Erreur de parsing du champ allergens JSON", e);
+                    }
+                } else {
+                    // Pas d’allergènes : tu peux laisser la liste vide ou null selon ton design
+                    p.setAllergens(List.of());
+                }
+                p.setImageUrl(imageUrl + p.getId() + ".png");
+                products.add(p);
+            });
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de la récupération des produits : " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // 🔽 À la fin de ton try, juste avant "return products;"
+        try {
+            // Sérialisation JSON de la liste products
+            String jsonOutput = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(products);
+
+            // Écriture dans un fichier externe
+            Path outputPath = Paths.get("C:/temp/products_yellows.json");
+
+            Files.writeString(outputPath, jsonOutput);
+
+            System.out.println("✅ Fichier JSON généré : " + outputPath.toAbsolutePath());
+
+        } catch (IOException e) {
+            System.err.println("❌ Erreur lors de l’écriture du fichier JSON : " + e.getMessage());
+        }
+
+        return products;
+    }
+
+    public List<Product> getProductsDV() {
+        List<Product> products = new ArrayList<>();
+
+        try {
+            // Récupération des éléments nécessaires
+            // Collection collection = scopeService.getRepositoryCollection();
+
+            String bucket = "ClickAndCollect";
+            String scope = "repository";
+            String coll = "product";
+
+            // ✅ Requête N1QL : sélectionne tous les documents de la collection
+            String query = String.format(
+                    "SELECT p.id, p.name.fr AS name, p.priceIncludingTax,p.type, p.description.fr as description_fr,p.vatType,p.typ_prod,p.familles.num_fami,p.familles.lib_fami,p.familles.num_sfam,p.familles.lib_sfam,p.familles.num_ssfa,p.familles.lib_ssfa,p.cod_prog FROM `%s`.`%s`.`%s` AS p WHERE p.familles.num_ssfa in [102702,102705,102708,102710,102712,102714,102716,102719] ORDER BY p.id",
+                    bucket, scope, coll);
+
+            System.out.println(query);
+            QueryResult result = cluster.query(query);
+
+            if (result.rowsAsObject().isEmpty()) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Aucun produit trouvé pour DolceVita");
+            }
+
+            // ✅ Parcours des résultats et conversion en objets Product
+            result.rowsAsObject().forEach(row -> {
+                Product p = new Product();
+                p.setId(row.getInt("id")); // si ton document contient un champ "id"
+                p.setName(row.getString("name"));
+                p.setpriceIncludingTax(row.getDouble("priceIncludingTax"));
+                p.setVatType(String.valueOf(row.get("vatType")));
+                // p.setVatType(row.getString("vatType"));
+                p.setType_product(row.getString("type"));
+                p.setCategoryId(row.getString("categoryId"));
+                p.setCategoryName_fr(row.getString("categoryName_fr"));
+                p.setCategorydescription_fr(row.getString("categorydescription_fr"));
+                p.setDescription_fr(row.getString("description_fr"));
+                // p.setAllergens(row.getString("allergens"));
+
+                p.settypeDeProduit(row.getString("typ_prod"));
+                Familles familles = new Familles();
+                familles.setcodeFamille(row.getInt("num_fami"));
+                familles.setlibelleFamille(row.getString("lib_fami").trim());
+                familles.setcodeSousFamille(row.getInt("num_sfam"));
+                familles.setlibelleSousFamille(row.getString("lib_sfam").trim());
+                familles.setcodeSousSousFamille(row.getInt("num_ssfa"));
+                familles.setlibelleSousSousFamille(row.getString("lib_ssfa").trim());
+                p.setFamilles(familles);
+                p.setGencod(row.getString("cod_prog"));
+                p.setImageUrl(imageUrl + p.getId() + ".png");
+
+                com.couchbase.client.java.json.JsonArray allergensArray = row.getArray("allergens");
+                if (allergensArray != null) {
+                    // Convertir JsonArray en chaîne JSON
+                    String allergensJsonString = allergensArray.toString();
+                    // System.out.println("allergenJsonString=" + allergensJsonString);
+                    try {
+                        TypeFactory tf = objectMapper.getTypeFactory();
+                        List<Allergen> allergensList = objectMapper.readValue(
+                                allergensJsonString,
+                                tf.constructCollectionType(List.class, Allergen.class));
+                        // System.out.println("DEBUG allergensList parsed = " + allergensList);
+                        p.setAllergens(allergensList);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Erreur de parsing du champ allergens JSON", e);
+                    }
+                } else {
+                    // Pas d’allergènes : tu peux laisser la liste vide ou null selon ton design
+                    p.setAllergens(List.of());
+                }
+                p.setImageUrl(imageUrl + p.getId() + ".png");
+                products.add(p);
+            });
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de la récupération des produits : " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // 🔽 À la fin de ton try, juste avant "return products;"
+        try {
+            // Sérialisation JSON de la liste products
+            String jsonOutput = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(products);
+
+            // Écriture dans un fichier externe
+            Path outputPath = Paths.get("C:/temp/products_dolceVita.json");
+
+            Files.writeString(outputPath, jsonOutput);
+
+            System.out.println("✅ Fichier JSON généré : " + outputPath.toAbsolutePath());
+
+        } catch (IOException e) {
+            System.err.println("❌ Erreur lors de l’écriture du fichier JSON : " + e.getMessage());
+        }
+
         return products;
     }
 }

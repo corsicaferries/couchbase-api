@@ -65,4 +65,34 @@ public class ProductController {
 
     }
 
+    // ✅ GET : produits Yellows
+    @GetMapping("/yellows")
+    public ResponseEntity<?> getProductYellows() {
+        List<Product> products = service.getProductsYellows();
+        if (products.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of(
+                            "status", 404,
+                            "message", "Aucun produit trouvé pour yellows "));
+        }
+
+        return ResponseEntity.ok(products);
+
+    }
+
+    // ✅ GET : produits DolceVIta
+    @GetMapping("/DV")
+    public ResponseEntity<?> getProductDV() {
+        List<Product> products = service.getProductsDV();
+        if (products.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of(
+                            "status", 404,
+                            "message", "Aucun produit trouvé pour DolceVita "));
+        }
+
+        return ResponseEntity.ok(products);
+
+    }
+
 }
