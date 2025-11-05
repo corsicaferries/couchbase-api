@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Recherche des Tickets de Caisse</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background: #007BFF;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Recherche des Tickets de Caisse</h2>
+
+    <form id="ticketForm">
+        <label for="dateVoyage">Date de voyage :</label>
+        <input type="date" id="dateVoyage" name="dateVoyage" required>
+
+        <label for="codeLigne">Code ligne :</label>
+        <input type="text" id="codeLigne" name="codeLigne" placeholder="Ex: LIG001">
+
+        <label for="heureDepart">Heure de départ navire :</label>
+        <input type="time" id="heureDepart" name="heureDepart">
+
+        <label for="caisse">Caisse :</label>
+        <input type="text" id="caisse" name="caisse" placeholder="Ex: Caisse 1">
+
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <table id="ticketsTable">
+        <thead>
+            <tr>
+                <th>ID Ticket</th>
+                <th>Date Voyage</th>
+                <th>Code Ligne</th>
+                <th>Heure Départ</th>
+                <th>Caisse</th>
+                <th>Montant</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        const form = document.getElementById('ticketForm');
+        const tableBody = document.querySelector('#ticketsTable tbody');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const params = {
+                dateVoyage: form.dateVoyage.value,
+                codeLigne: form.codeLigne.value,
+                heureDepart: form.heureDepart.value,
+                caisse: form.caisse.value
+            };
+
+            // Appel de ton API Spring Boot
+            const query = new URLSearchParams(params);
+            const response = await fetch(`http://localhost:8080/api/tickets?${query}`);
+
+            if (!response.ok) {
+                alert("Erreur lors de la récupération des tickets");
+                return;
+            }
+
+            const tickets = await response.json();
+            tableBody.innerHTML = "";
+
+            if (tickets.length === 0) {
+                tableBody.innerHTML = "<tr><td colspan='6'>Aucun ticket trouvé</td></tr>";
+                return;
+            }
+
+            tickets.forEach(ticket => {
+                const row = `
+                    <tr>
+                        <td>${ticket.id}</td>
+                        <td>${ticket.dateVoyage}</td>
+                        <td>${ticket.codeLigne}</td>
+                        <td>${ticket.heureDepart}</td>
+                        <td>${ticket.caisse}</td>
+                        <td>${ticket.montant}</td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+        });
+    </script>
+
+</body>
+
+</html>
