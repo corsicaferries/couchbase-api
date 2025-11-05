@@ -12,8 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.couchbase.client.java.kv.GetResult;
 import com.couchbase.client.java.Cluster;
@@ -79,7 +81,11 @@ public class TravelService {
         try {
             ResponseEntity<Map> response = restTemplate.exchange(apiUrl, HttpMethod.POST,
                     request, Map.class);
-            List<Map<String, Object>> data = (List<Map<String, Object>>) response.getBody().get("data");
+
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> data = Optional.ofNullable(response.getBody())
+                    .map(b -> (List<Map<String, Object>>) b.get("data"))
+                    .orElse(Collections.emptyList());
 
             ObjectMapper mapper = new ObjectMapper();
             return data.stream()

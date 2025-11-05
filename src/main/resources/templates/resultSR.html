@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Résultat</title>
+</head>
+
+<body>
+    <h1>Résultat pour le produit [[${id}]]</h1>
+
+    <p th:text="'Nom : ' + ${name}">Nom : ...</p>
+    <p th:text="'Prix : ' + ${price} + ' €'">Prix : ...</p>
+
+    <a th:href="@{/formSR}">Retour au formulaire</a>
+</body>
+
+</html>

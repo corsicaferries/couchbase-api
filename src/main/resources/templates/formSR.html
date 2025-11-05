@@ -1,0 +1,20 @@
+<!-- src/main/resources/templates/formSR.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Recherche de produit</title>
+</head>
+
+<body>
+    <h1>Rechercher un produit</h1>
+
+    <form th:action="@{/submit}" method="post">
+        <label for="code">Code du produit :</label>
+        <input type="text" id="code" name="code" placeholder="ex: DV" required>
+        <button type="submit">Rechercher</button>
+    </form>
+</body>
+
+</html>

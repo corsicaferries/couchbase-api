@@ -1,2 +1,4 @@
 ### Test de l'API Hello
 GET http://localhost:9090/api/products
+
+GET http://localhost:9090/formSR
