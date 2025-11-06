@@ -1,4 +1,8 @@
 ### Test de l'API Hello
 GET http://localhost:9090/api/products
 
+# Remplir Formulaire + API
 GET http://localhost:9090/formSR
+
+# Envoi fichier EXcel + API
+GET http://localhost:9090/api/export/products/DV

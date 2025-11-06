@@ -1,8 +1,6 @@
 package com.neptune2.couchbase_api.service;
 
-import com.neptune2.couchbase_api.model.Product;
 import com.neptune2.couchbase_api.model.Ticket;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
@@ -11,7 +9,6 @@ import org.springframework.http.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +19,7 @@ public class TicketService {
     @Value("${innovorder.api.url}") // configurable dans application.properties
     String externalApiUrl;
 
-    // ✅ GET : lire tous les produits
+    // ✅ GET : lire tous les tickets
     @GetMapping
     public List<Ticket> getRepositoryTickets(LocalDate dateVoyage, String codeLigne, LocalTime heureDepart,
             String caisse) {

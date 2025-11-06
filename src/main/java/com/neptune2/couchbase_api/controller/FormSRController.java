@@ -5,10 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import com.couchbase.client.java.json.JsonObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.neptune2.couchbase_api.model.Product;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

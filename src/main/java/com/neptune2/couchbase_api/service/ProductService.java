@@ -10,12 +10,20 @@ import com.couchbase.client.java.Cluster;
 import com.neptune2.couchbase_api.model.Allergen;
 import com.neptune2.couchbase_api.model.Familles;
 import com.neptune2.couchbase_api.model.Product;
+import com.neptune2.couchbase_api.service.ExcelExportService;
 
+import org.apache.poi.sl.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -569,22 +577,18 @@ public class ProductService {
             e.printStackTrace();
         }
 
-        // 🔽 À la fin de ton try, juste avant "return products;"
+        // --- Export JSON et Excel ---
         try {
-            // Sérialisation JSON de la liste products
+            // ✅ 1. Export JSON
             String jsonOutput = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(products);
+            Path outputPathJson = Paths.get("C:/temp/products_dolceVita.json");
+            Files.writeString(outputPathJson, jsonOutput);
+            System.out.println("✅ Fichier JSON généré : " + outputPathJson.toAbsolutePath());
 
-            // Écriture dans un fichier externe
-            Path outputPath = Paths.get("C:/temp/products_dolceVita.json");
-
-            Files.writeString(outputPath, jsonOutput);
-
-            System.out.println("✅ Fichier JSON généré : " + outputPath.toAbsolutePath());
-
-        } catch (IOException e) {
-            System.err.println("❌ Erreur lors de l’écriture du fichier JSON : " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de la génération du JSON/Excel : " + e.getMessage());
+            e.printStackTrace();
         }
-
         return products;
     }
 }

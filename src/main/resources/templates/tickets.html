@@ -117,11 +117,17 @@
                 heureDepart: form.heureDepart.value,
                 caisse: form.caisse.value
             };
-
+            
             // Appel de ton API Spring Boot
+            const apiKey = import.meta.env.X-API-KEY;
             const query = new URLSearchParams(params);
-            const response = await fetch(`http://localhost:8080/api/tickets?${query}`);
-
+            
+            const response = await fetch(`http://localhost:9090/api/tickets?${query}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-AI-KEY": apiKey
+                }
+            });
             if (!response.ok) {
                 alert("Erreur lors de la récupération des tickets");
                 return;
