@@ -22,4 +22,4 @@ Thumbs.db
 
 # Ignorer les configurations sensibles
 src/main/resources/application-dev.properties
-src/main/resources/applicatio-prod.properties
+src/main/resources/application-prod.properties
