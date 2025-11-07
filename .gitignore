@@ -18,3 +18,8 @@ application.yml
 # OS
 .DS_Store
 Thumbs.db
+
+
+# Ignorer les configurations sensibles
+src/main/resources/application-dev.properties
+src/main/resources/applicatio-prod.properties
