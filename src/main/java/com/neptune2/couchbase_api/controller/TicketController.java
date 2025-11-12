@@ -19,9 +19,9 @@ public class TicketController {
 
     @GetMapping
     public List<Ticket> getTickets(
-            @RequestParam LocalDate dateVoyage,
+            @RequestParam String dateVoyage,
             @RequestParam(required = false) String codeLigne,
-            @RequestParam(required = false) LocalTime heureDepart,
+            @RequestParam(required = false) String heureDepart,
             @RequestParam(required = false) String caisse) {
 
         return ticketService.getRepositoryTickets(dateVoyage, codeLigne, heureDepart, caisse);

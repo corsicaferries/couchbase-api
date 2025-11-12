@@ -6,7 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.couchbase.config.AbstractCouchbaseConfiguration;
 import org.springframework.data.couchbase.repository.config.EnableCouchbaseRepositories;
 import com.couchbase.client.java.Cluster;
+import com.couchbase.client.java.env.ClusterEnvironment;
+
 import com.couchbase.client.java.Bucket;
+
 import java.time.Duration;
 
 @Configuration
@@ -25,23 +28,44 @@ public class CouchbaseConfig extends AbstractCouchbaseConfiguration {
     @Value("${spring.data.couchbase.bucket-name}")
     private String bucketName;
 
-   
     @Override
-    public String getConnectionString() { return connectionString; }
+    public String getConnectionString() {
+        return connectionString;
+    }
 
     @Override
-    public String getUserName() { return username; }
+    public String getUserName() {
+        return username;
+    }
 
     @Override
-    public String getPassword() { return password; }
+    public String getPassword() {
+        return password;
+    }
 
     @Override
-    public String getBucketName() { return bucketName; }
+    public String getBucketName() {
+        return bucketName;
+    }
 
-   
+    public Boolean enableTls() {
+        return getConnectionString().startsWith("couchbases://");
+    }
+
     @Bean
     public Cluster couchbaseCluster() {
-        return Cluster.connect(getConnectionString(), getUserName(), getPassword());
+        // SANS TLS
+        // return Cluster.connect(getConnectionString(), getUserName(), getPassword());
+
+        ClusterEnvironment environment = ClusterEnvironment.builder()
+                .securityConfig(security -> security.enableTls(enableTls()))
+                .build();
+
+        return Cluster.connect(
+                getConnectionString(),
+                com.couchbase.client.java.ClusterOptions.clusterOptions(getUserName(), getPassword())
+                        .environment(environment));
+
     }
 
     @Bean
