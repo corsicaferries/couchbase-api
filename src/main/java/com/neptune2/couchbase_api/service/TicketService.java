@@ -65,14 +65,17 @@ public class TicketService {
         String token = getAccessToken();
 
         // Construction de l’URL avec les paramètres
-        String url = String.format("%s?dateVoyage=%s", externalApiUrl, dateVoyage);
-        if (codeLigne != null && !codeLigne.isEmpty())
-            url += "&codeLigne=" + codeLigne;
-        if (heureDepart != null)
-            url += "&heureDepart=" + heureDepart;
-        if (caisse != null && !caisse.isEmpty())
-            url += "&caisse=" + caisse;
-
+        // String url = String.format("%s?dateVoyage=%s", externalApiUrl, dateVoyage);
+        String url = String.format("%s?restaurantIds=1286", externalApiUrl);
+        /*
+         * if (codeLigne != null && !codeLigne.isEmpty())
+         * url += "&codeLigne=" + codeLigne;
+         * if (heureDepart != null)
+         * url += "&heureDepart=" + heureDepart;
+         * 
+         * if (caisse != null && !caisse.isEmpty())
+         * url += "&caisse=" + caisse;
+         */
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(token);

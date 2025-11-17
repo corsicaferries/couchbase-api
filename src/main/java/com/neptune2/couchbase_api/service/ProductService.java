@@ -54,7 +54,7 @@ public class ProductService {
             // Récupération des éléments nécessaires
             // Collection collection = scopeService.getRepositoryCollection();
 
-            String bucket = "ClickAndCollect";
+            String bucket = "Neptune-dev";
             String scope = "repository";
             String coll = "product";
 
@@ -131,7 +131,7 @@ public class ProductService {
     }
 
     public Product getProductById(Integer productId) {
-        String bucket = "ClickAndCollect";
+        String bucket = "Neptune-dev";
         String scope = "repository";
         String coll = "product";
 
@@ -227,7 +227,7 @@ public class ProductService {
             // Récupération des éléments nécessaires
             // Collection collection = scopeService.getRepositoryCollection();
 
-            String bucket = "ClickAndCollect";
+            String bucket = "Neptune-dev";
             String scope = "repository";
             String coll = "product";
 
@@ -316,7 +316,7 @@ public class ProductService {
             // Récupération des éléments nécessaires
             // Collection collection = scopeService.getRepositoryCollection();
 
-            String bucket = "ClickAndCollect";
+            String bucket = "Neptune-dev";
             String scope = "repository";
             String coll = "product";
 
@@ -405,7 +405,7 @@ public class ProductService {
             // Récupération des éléments nécessaires
             // Collection collection = scopeService.getRepositoryCollection();
 
-            String bucket = "ClickAndCollect";
+            String bucket = "Neptune-dev";
             String scope = "repository";
             String coll = "product";
 
@@ -504,7 +504,7 @@ public class ProductService {
             // Récupération des éléments nécessaires
             // Collection collection = scopeService.getRepositoryCollection();
 
-            String bucket = "ClickAndCollect";
+            String bucket = "Neptune-dev";
             String scope = "repository";
             String coll = "product";
 
