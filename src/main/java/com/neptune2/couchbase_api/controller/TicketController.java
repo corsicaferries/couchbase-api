@@ -16,7 +16,8 @@ public class TicketController {
 
     @Autowired
     private TicketService ticketService;
-     @GetMapping
+
+    @GetMapping
     public TicketReponse getTickets(
             @RequestParam(required = false) String dateVoyage,
             @RequestParam(required = false) String codeLigne,
@@ -29,7 +30,7 @@ public class TicketController {
                 startDate, endDate);
 
         // EXTRAIRE la liste de tickets
-    List<Ticket> tickets = ticketResponse.getTickets();
+        List<Ticket> tickets = ticketResponse.getTickets();
 
         // CALCULER à partir de la liste et non TicketReponse
         double total = ticketService.calculategetTotalPriceDiscountedWithTaxIncluded(tickets);
@@ -37,7 +38,6 @@ public class TicketController {
 
         // RECONSTRUIRE la réponse propre
         return new TicketReponse(tickets, total, totalByPayment);
-        // return ticketService.getRepositoryTickets(dateVoyage, codeLigne, heureDepart,
-        // caisse);
+        
     }
 }

@@ -6,3 +6,6 @@ GET http://localhost:9090/formSR
 
 # Envoi fichier EXcel + API
 GET http://localhost:9090/api/export/products/DV
+
+# TEST FORMULAIRE TICKET + GENERATION XLS
+http://localhost:9090/api/tickets/formTicket

@@ -27,7 +27,7 @@ public class FormSRController {
         return "formSR"; // ton formulaire
     }
 
-    @PostMapping("/submit")
+    @PostMapping("/submit-sr")
     public String submitForm(@RequestParam String code, Model model) {
         String apiUrl = "http://localhost:9090/api/products/" + code;
 
