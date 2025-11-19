@@ -52,9 +52,9 @@ public class CouchbaseConfig {
             if (enableTls()) {
                 ClassPathResource certResource = new ClassPathResource("couchbase-cert.pem");
 
-                System.out.println("TLS activé ? " + enableTls());
-                System.out.println("Connection string = " + connectionString);
-                System.out.println("Certificat trouvé ? " + certResource.exists());
+                //System.out.println("TLS activé ? " + enableTls());
+                //System.out.println("Connection string = " + connectionString);
+                //System.out.println("Certificat trouvé ? " + certResource.exists());
 
                 if (!certResource.exists()) {
                     throw new IllegalStateException("Certificat Couchbase introuvable dans src/main/resources !");
