@@ -1,22 +1,95 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr">
 <head>
+    <meta charset="UTF-8" />
     <title>Recherche Tickets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        form {
+            background: #fff;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="datetime-local"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
 </head>
 <body>
 
 <h2>Recherche de tickets</h2>
 
-
 <form action="/api/tickets/searchTickets" method="POST">
 
-    Date Voyage : <input type="text" name="dateVoyage" /> (ex: 111125) <br/><br/>
-    Code Ligne : <input type="text" name="codeLigne" /> <br/><br/>
-    Heure Départ : <input type="text" name="heureDepart" /> (ex: 20:00) <br/><br/>
-    Caisse : <input type="text" name="caisse" /> <br/><br/>
+    <label>Date Voyage :</label>
+    <input type="date" name="dateVoyage" />
 
-    Start Date : <input type="datetime-local" name="startDate" /> <br/><br/>
-    End Date : <input type="datetime-local" name="endDate" /> <br/><br/>
+    <label>Code Ligne :</label>
+    <input type="text" name="codeLigne" />
+
+    <label>Heure Départ :</label>
+    <input type="text" name="heureDepart" placeholder="ex: 20:00" />
+
+    <label>Caisse :</label>
+    <input type="text" name="caisse" />
+
+    <label>Start Date :</label>
+    <input type="datetime-local" name="startDate" />
+
+    <label>End Date :</label>
+    <input type="datetime-local" name="endDate" />
 
     <button type="submit">Rechercher</button>
 </form>
