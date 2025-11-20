@@ -35,6 +35,9 @@ public class Ticket {
     private String restaurantId;     
     @JsonIgnore
     private RestaurantInfo restaurant;
+   
+
+
 
 
     public String getRestaurantId() {

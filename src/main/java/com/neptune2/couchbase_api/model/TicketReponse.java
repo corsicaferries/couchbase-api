@@ -8,6 +8,15 @@ public class TicketReponse {
     private List<Ticket> tickets;
     private Ticket ticket;
     private double totalPriceDiscountedWithTaxIncluded;
+    private String metadata;
+
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
+    }
 
     // ✔ Getter pour récupérer tous les tickets
     public List<Ticket> getTickets() {
