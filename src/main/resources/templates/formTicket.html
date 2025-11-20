@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Recherche Tickets</title>
+</head>
+<body>
+
+<h2>Recherche de tickets</h2>
+
+
+<form action="/api/tickets/searchTickets" method="POST">
+
+    Date Voyage : <input type="text" name="dateVoyage" /> (ex: 111125) <br/><br/>
+    Code Ligne : <input type="text" name="codeLigne" /> <br/><br/>
+    Heure Départ : <input type="text" name="heureDepart" /> (ex: 20:00) <br/><br/>
+    Caisse : <input type="text" name="caisse" /> <br/><br/>
+
+    Start Date : <input type="datetime-local" name="startDate" /> <br/><br/>
+    End Date : <input type="datetime-local" name="endDate" /> <br/><br/>
+
+    <button type="submit">Rechercher</button>
+</form>
+
+</body>
+</html>

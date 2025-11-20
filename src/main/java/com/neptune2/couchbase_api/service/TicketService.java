@@ -94,7 +94,7 @@ public class TicketService {
         try {
             ResponseEntity<String> rawResponse = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
 
-            log.info(" Réponse brute JSON = {}", rawResponse.getBody());
+            //log.info(" Réponse brute JSON = {}", rawResponse.getBody());
 
             ObjectMapper mapper = new ObjectMapper();
             ApiResponse response = mapper.readValue(rawResponse.getBody(), ApiResponse.class);
